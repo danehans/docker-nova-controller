@@ -1,7 +1,4 @@
 [DEFAULT]
-notification_driver=ceilometer.compute.nova_notifier
-notification_driver=nova.openstack.common.notifier.rpc_notifier
-
 #
 # Options defined in oslo.messaging
 #
@@ -9,7 +6,6 @@ notification_driver=nova.openstack.common.notifier.rpc_notifier
 # Use durable queues in amqp. (boolean value)
 # Deprecated group;name - DEFAULT;rabbit_durable_queues
 #amqp_durable_queues=false
-amqp_durable_queues=False
 
 # Auto-delete queues in amqp. (boolean value)
 #amqp_auto_delete=false
@@ -76,35 +72,30 @@ amqp_durable_queues=False
 # The RabbitMQ broker address where a single node is used.
 # (string value)
 #rabbit_host=localhost
-rabbit_host=10.10.10.200
-
+rabbit_host=<%= env_rabbit_host %>
 # The RabbitMQ broker port where a single node is used.
 # (integer value)
 #rabbit_port=5672
-rabbit_port=5672
 
 # RabbitMQ HA cluster host:port pairs. (list value)
 #rabbit_hosts=$rabbit_host:$rabbit_port
-rabbit_hosts=10.10.10.200:5672
 
 # Connect over SSL for RabbitMQ. (boolean value)
 #rabbit_use_ssl=false
-rabbit_use_ssl=False
 
 # The RabbitMQ userid. (string value)
 #rabbit_userid=guest
-rabbit_userid=guest
+rabbit_userid=<%= env_rabbit_user %>
 
 # The RabbitMQ password. (string value)
 #rabbit_password=guest
-rabbit_password=guest
+rabbit_password=<%= env_rabbit_password %>
 
 # the RabbitMQ login method (string value)
 #rabbit_login_method=AMQPLAIN
 
 # The RabbitMQ virtual host. (string value)
 #rabbit_virtual_host=/
-rabbit_virtual_host=/
 
 # How frequently to retry connecting with RabbitMQ. (integer
 # value)
@@ -122,7 +113,6 @@ rabbit_virtual_host=/
 # this option, you must wipe the RabbitMQ database. (boolean
 # value)
 #rabbit_ha_queues=false
-rabbit_ha_queues=False
 
 # If passed, use a fake RabbitMQ provider. (boolean value)
 #fake_rabbit=false
@@ -169,12 +159,11 @@ rabbit_ha_queues=False
 # Driver or drivers to handle sending notifications. (multi
 # valued)
 #notification_driver=
-notification_driver=
+notification_driver=nova.openstack.common.notifier.rpc_notifier
 
 # AMQP topic used for OpenStack notifications. (list value)
 # Deprecated group;name - [rpc_notifier2]/topics
 #notification_topics=notifications
-notification_topics=notifications
 
 # Seconds to wait for a response from a call. (integer value)
 #rpc_response_timeout=60
@@ -251,7 +240,7 @@ rpc_backend=nova.openstack.common.rpc.impl_kombu
 #
 
 # IP address of this host (string value)
-#my_ip=10.0.0.1
+my_ip=<%= env_nova_api_host %>
 
 # Name of this node.  This can be an opaque identifier.  It is
 # not necessarily a hostname, FQDN, or IP address. However,
@@ -277,7 +266,6 @@ rpc_backend=nova.openstack.common.rpc.impl_kombu
 # If set, send api.fault notifications on caught exceptions in
 # the API service. (boolean value)
 #notify_api_faults=false
-notify_api_faults=False
 
 # Default notification level for outgoing notifications
 # (string value)
@@ -302,8 +290,6 @@ notify_api_faults=False
 # Top-level directory for maintaining nova's state (string
 # value)
 #state_path=/var/lib/nova
-state_path=/var/lib/nova
-
 
 #
 # Options defined in nova.policy
@@ -383,7 +369,6 @@ state_path=/var/lib/nova
 # Seconds between nodes reporting state to datastore (integer
 # value)
 #report_interval=10
-report_interval=10
 
 # Enable periodic tasks (boolean value)
 #periodic_enable=true
@@ -395,7 +380,6 @@ report_interval=10
 
 # A list of APIs to enable by default (list value)
 #enabled_apis=ec2,osapi_compute,metadata
-enabled_apis=ec2,osapi_compute,metadata
 
 # A list of APIs with enabled SSL (list value)
 #enabled_ssl_apis=
@@ -403,7 +387,6 @@ enabled_apis=ec2,osapi_compute,metadata
 # The IP address on which the EC2 API will listen. (string
 # value)
 #ec2_listen=0.0.0.0
-ec2_listen=0.0.0.0
 
 # The port on which the EC2 API will listen. (integer value)
 #ec2_listen_port=8773
@@ -415,7 +398,6 @@ ec2_listen=0.0.0.0
 # The IP address on which the OpenStack API will listen.
 # (string value)
 #osapi_compute_listen=0.0.0.0
-osapi_compute_listen=0.0.0.0
 
 # The port on which the OpenStack API will listen. (integer
 # value)
@@ -432,7 +414,6 @@ osapi_compute_workers=1
 # The IP address on which the metadata API will listen.
 # (string value)
 #metadata_listen=0.0.0.0
-metadata_listen=0.0.0.0
 
 # The port on which the metadata API will listen. (integer
 # value)
@@ -465,7 +446,6 @@ metadata_workers=1
 # Maximum time since last check-in for up service (integer
 # value)
 #service_down_time=60
-service_down_time=60
 
 
 #
@@ -496,7 +476,6 @@ service_down_time=60
 # Path to the rootwrap configuration file to use for running
 # commands as root (string value)
 #rootwrap_config=/etc/nova/rootwrap.conf
-rootwrap_config=/etc/nova/rootwrap.conf
 
 # Explicitly specify the temporary working directory (string
 # value)
@@ -559,8 +538,6 @@ auth_strategy=keystone
 # Treat X-Forwarded-For as the canonical remote address. Only
 # enable this if you have a sanitizing proxy. (boolean value)
 #use_forwarded_for=false
-use_forwarded_for=False
-
 
 #
 # Options defined in nova.api.ec2
@@ -634,14 +611,12 @@ use_forwarded_for=False
 # Set flag to indicate Neutron will proxy metadata requests
 # and resolve instance ids. (boolean value)
 #service_neutron_metadata_proxy=false
-service_neutron_metadata_proxy=True
+service_neutron_metadata_proxy=<%= env_service_neutron_metadata_proxy %>
 
 # Shared secret to validate proxies Neutron metadata requests
 # (string value)
 #neutron_metadata_proxy_shared_secret=
-neutron_metadata_proxy_shared_secret=cisco123
-
-
+neutron_metadata_proxy_shared_secret=<%= env_neutron_metadata_proxy_shared_secret %>
 #
 # Options defined in nova.api.metadata.vendordata_json
 #
@@ -708,8 +683,6 @@ neutron_metadata_proxy_shared_secret=cisco123
 # Default tenant id when creating neutron networks (string
 # value)
 #neutron_default_tenant_id=default
-neutron_default_tenant_id=default
-
 
 #
 # Options defined in nova.api.openstack.compute.extensions
@@ -814,13 +787,10 @@ neutron_default_tenant_id=default
 
 # Host on which to listen for incoming requests (string value)
 #novncproxy_host=0.0.0.0
-novncproxy_host=0.0.0.0
 
 # Port on which to listen for incoming requests (integer
 # value)
 #novncproxy_port=6080
-novncproxy_port=6080
-
 
 #
 # Options defined in nova.cmd.spicehtml5proxy
@@ -1158,7 +1128,7 @@ novncproxy_port=6080
 # with https:// for ssl-based glance api servers.
 # ([hostname|ip]:port) (list value)
 #glance_api_servers=$glance_host:$glance_port
-glance_api_servers=10.10.10.100:9292
+glance_api_servers=<%= env_glance_api_host %>:9292
 
 # Allow to perform insecure SSL (https) requests to glance
 # (boolean value)
@@ -1172,7 +1142,6 @@ glance_api_servers=10.10.10.100:9292
 # direct_url.  Currently supported schemes: [file]. (list
 # value)
 #allowed_direct_url_schemes=
-
 
 #
 # Options defined in nova.image.s3
@@ -1219,7 +1188,6 @@ glance_api_servers=10.10.10.100:9292
 # value)
 #network_api_class=nova.network.api.API
 network_api_class=nova.network.neutronv2.api.API
-
 
 #
 # Options defined in nova.network.driver
@@ -1362,7 +1330,6 @@ network_api_class=nova.network.neutronv2.api.API
 
 # The IP address for the metadata API server (string value)
 #metadata_host=$my_ip
-metadata_host=10.10.10.100
 
 # The port for the metadata API port (integer value)
 #metadata_port=8775
@@ -1486,12 +1453,11 @@ metadata_host=10.10.10.100
 
 # URL for connecting to neutron (string value)
 #neutron_url=http://127.0.0.1:9696
-neutron_url=http://10.10.10.200:9696
+neutron_url=http://<%= env_neutron_api_host %>:9696
 
 # Timeout value for connecting to neutron in seconds (integer
 # value)
 #neutron_url_timeout=30
-neutron_url_timeout=30
 
 # Username for connecting to neutron in admin context (string
 # value)
@@ -1501,7 +1467,7 @@ neutron_admin_username=neutron
 # Password for connecting to neutron in admin context (string
 # value)
 #neutron_admin_password=<None>
-neutron_admin_password=cisco123
+neutron_admin_password=<%= env_neutron_admin_password %>
 
 # Tenant id for connecting to neutron in admin context (string
 # value)
@@ -1512,17 +1478,17 @@ neutron_admin_password=cisco123
 # Note that with Keystone V3 tenant names are only unique
 # within a domain. (string value)
 #neutron_admin_tenant_name=<None>
-neutron_admin_tenant_name=services
+neutron_admin_tenant_name=<%= env_service_tenant %>
 
 # Region name for connecting to neutron in admin context
 # (string value)
 #neutron_region_name=<None>
-neutron_region_name=RegionOne
+neutron_region_name=<%= env_region %>
 
 # Authorization URL for connecting to neutron in admin context
 # (string value)
 #neutron_admin_auth_url=http://localhost:5000/v2.0
-neutron_admin_auth_url=http://10.10.10.200:35357/v2.0
+neutron_admin_auth_url=http://<%= env_keystone_host %>:<%= env_keystone_admin_host_port%>/v2.0
 
 # If set, ignore any SSL validation issues (boolean value)
 #neutron_api_insecure=false
@@ -1530,17 +1496,14 @@ neutron_admin_auth_url=http://10.10.10.200:35357/v2.0
 # Authorization strategy for connecting to neutron in admin
 # context (string value)
 #neutron_auth_strategy=keystone
-neutron_auth_strategy=keystone
 
 # Name of Integration Bridge used by Open vSwitch (string
 # value)
 #neutron_ovs_bridge=br-int
-neutron_ovs_bridge=br-int
 
 # Number of seconds before querying neutron for extensions
 # (integer value)
 #neutron_extension_sync_interval=600
-neutron_extension_sync_interval=600
 
 # Location of CA certificates file to use for neutron client
 # requests. (string value)
@@ -1567,7 +1530,6 @@ neutron_extension_sync_interval=600
 # The full class name of the security API class (string value)
 #security_group_api=nova
 security_group_api=neutron
-
 
 #
 # Options defined in nova.objectstore.s3server
@@ -1607,7 +1569,6 @@ security_group_api=neutron
 
 # Directory to use for lock files. (string value)
 #lock_path=/var/lib/nova/tmp
-lock_path=/var/lib/nova/tmp
 
 
 #
@@ -1617,12 +1578,11 @@ lock_path=/var/lib/nova/tmp
 # Print debugging output (set logging level to DEBUG instead
 # of default WARNING level). (boolean value)
 #debug=false
-debug=False
 
 # Print more verbose output (set logging level to INFO instead
 # of default WARNING level). (boolean value)
 #verbose=false
-verbose=True
+verbose=true
 
 # Log output to standard error (boolean value)
 #use_stderr=False
@@ -1688,13 +1648,11 @@ verbose=True
 # paths (string value)
 # Deprecated group;name - DEFAULT;logdir
 #log_dir=/var/log/nova
-log_dir=/var/log/nova
 
 # Use syslog for logging. Existing syslog format is DEPRECATED
 # during I, and then will be changed in J to honor RFC5424
 # (boolean value)
 #use_syslog=false
-use_syslog=False
 
 # (Optional) Use syslog rfc5424 format for logging. If
 # enabled, will add APP-NAME (RFC5424) before the MSG part of
@@ -1795,8 +1753,6 @@ use_syslog=False
 # to this configuration value if no per-aggregate setting
 # found. (floating point value)
 #cpu_allocation_ratio=16.0
-cpu_allocation_ratio=16.0
-
 
 #
 # Options defined in nova.scheduler.filters.disk_filter
@@ -1849,8 +1805,6 @@ cpu_allocation_ratio=16.0
 # this configuration value if no per-aggregate setting found.
 # (floating point value)
 #ram_allocation_ratio=1.5
-ram_allocation_ratio=1.5
-
 
 #
 # Options defined in nova.scheduler.host_manager
@@ -1865,7 +1819,6 @@ ram_allocation_ratio=1.5
 # Which filter class names to use for filtering hosts when not
 # specified in the request. (list value)
 #scheduler_default_filters=RetryFilter,AvailabilityZoneFilter,RamFilter,ComputeFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,ServerGroupAntiAffinityFilter,ServerGroupAffinityFilter
-scheduler_default_filters=RetryFilter,AvailabilityZoneFilter,RamFilter,ComputeFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,CoreFilter
 
 # Which weight class names to use for weighing hosts (list
 # value)
@@ -1990,7 +1943,6 @@ scheduler_default_filters=RetryFilter,AvailabilityZoneFilter,RamFilter,ComputeFi
 # vmwareapi.VMwareESXDriver, vmwareapi.VMwareVCDriver (string
 # value)
 #compute_driver=libvirt.LibvirtDriver
-compute_driver=nova.virt.libvirt.LibvirtDriver
 
 # The default format an ephemeral_volume will be formatted
 # with on creation. (string value)
@@ -2006,7 +1958,6 @@ compute_driver=nova.virt.libvirt.LibvirtDriver
 
 # Fail instance boot if vif plugging fails (boolean value)
 #vif_plugging_is_fatal=true
-vif_plugging_is_fatal=True
 
 # Number of seconds to wait for neutron vif plugging events to
 # arrive before continuing or failing (see
@@ -2014,8 +1965,6 @@ vif_plugging_is_fatal=True
 # vif_plugging_is_fatal is False, events should not be
 # expected to arrive at all. (integer value)
 #vif_plugging_timeout=300
-vif_plugging_timeout=300
-
 
 #
 # Options defined in nova.virt.firewall
@@ -2079,7 +2028,7 @@ firewall_driver=nova.virt.firewall.NoopFirewallDriver
 # Location of VNC console proxy, in the form
 # "http://127.0.0.1:6080/vnc_auto.html" (string value)
 #novncproxy_base_url=http://127.0.0.1:6080/vnc_auto.html
-novncproxy_base_url=http://10.10.10.100:6080/vnc_auto.html
+novncproxy_base_url=http://<%= nova_api_host %>:6080/vnc_auto.html
 
 # Location of nova xvp VNC console proxy, in the form
 # "http://127.0.0.1:6081/console" (string value)
@@ -2093,11 +2042,10 @@ vncserver_listen=0.0.0.0
 # The address to which proxy clients (like nova-xvpvncproxy)
 # should connect (string value)
 #vncserver_proxyclient_address=127.0.0.1
-vncserver_proxyclient_address=10.10.10.100
+vncserver_proxyclient_address=<%= nova_api_host %>
 
 # Enable VNC related features (boolean value)
 #vnc_enabled=true
-vnc_enabled=True
 
 # Keymap for VNC (string value)
 #vnc_keymap=en-us
@@ -2121,8 +2069,6 @@ vnc_enabled=True
 # The full class name of the volume API class to use (string
 # value)
 #volume_api_class=nova.volume.cinder.API
-volume_api_class=nova.volume.cinder.API
-
 
 #
 # Options defined in nova.volume.cinder
@@ -2156,10 +2102,7 @@ volume_api_class=nova.volume.cinder.API
 # Allow attach between instance and volume in different
 # availability zones. (boolean value)
 #cinder_cross_az_attach=true
-sql_connection=mysql://nova:cisco123@10.10.10.200/nova
-image_service=nova.image.glance.GlanceImageService
-osapi_volume_listen=0.0.0.0
-
+sql_connection=mysql://nova:<%= env_db_password%>@<%= env_db_host %>/nova
 
 [baremetal]
 
@@ -2739,12 +2682,11 @@ workers=1
 # Host providing the admin Identity API endpoint. Deprecated,
 # use identity_uri. (string value)
 #auth_host=127.0.0.1
-auth_host=10.10.10.200
-
+auth_host=<%= env_keystone_host %>
 # Port of the admin Identity API endpoint. Deprecated, use
 # identity_uri. (integer value)
 #auth_port=35357
-auth_port=35357
+auth_port=<%= env_keystone_admin_host_port %>
 
 # Protocol of the admin Identity API endpoint (http or https).
 # Deprecated, use identity_uri. (string value)
@@ -2753,7 +2695,7 @@ auth_protocol=http
 
 # Complete public Identity API endpoint (string value)
 #auth_uri=<None>
-auth_uri=http://10.10.10.200:5000/
+auth_uri=http://<%= env_keystone_host %>:<%= env_keystone_public_host_port %>/
 
 # Complete admin Identity API endpoint. This should specify
 # the unversioned root endpoint e.g. https://localhost:35357/
@@ -2791,12 +2733,12 @@ admin_user=nova
 
 # Keystone account password (string value)
 #admin_password=%SERVICE_PASSWORD%
-admin_password=cisco123
+admin_password=<%= env_service_password %>
 
 # Keystone service account tenant name to validate user tokens
 # (string value)
 #admin_tenant_name=%SERVICE_TENANT_NAME%
-admin_tenant_name=services
+admin_tenant_name=<%= env_service_tenant %>
 
 # Env key for the swift cache (string value)
 #cache=<None>
@@ -2907,7 +2849,6 @@ admin_tenant_name=services
 # xen) (string value)
 # Deprecated group;name - DEFAULT;libvirt_type
 #virt_type=kvm
-virt_type=qemu
 
 # Override the default libvirt URI (which is dependent on
 # virt_type) (string value)
@@ -2958,7 +2899,6 @@ live_migration_uri=qemu+ssh://nova@%s/system?no_verify=1&keyfile=/etc/nova/ssh/n
 # Juno release. (string value)
 # Deprecated group;name - DEFAULT;libvirt_vif_driver
 #vif_driver=nova.virt.libvirt.vif.LibvirtGenericVIFDriver
-vif_driver=nova.virt.libvirt.vif.LibvirtGenericVIFDriver
 
 # Libvirt handlers for remote volumes. (list value)
 # Deprecated group;name - DEFAULT;libvirt_volume_drivers

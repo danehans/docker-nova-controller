@@ -1,0 +1,20 @@
+nova.conf.erb:
+  target: /etc/nova/nova.conf
+  user: nova
+  group: nova
+  perms: 0644
+  config: {}
+
+admin-openrc.erb:
+  target: /root/admin-openrc.sh
+  user: root
+  group: root
+  perms: 0755
+  config: {}
+
+demo-openrc.erb:
+  target: /root/demo-openrc.sh
+  user: root
+  group: root
+  perms: 0755
+  config: {}
